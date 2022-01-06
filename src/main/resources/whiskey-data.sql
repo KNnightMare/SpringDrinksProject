@@ -1,0 +1,1 @@
+INSERT INTO whiskey(type, brand, blend, proof) VALUES ('Scotch Whiskey', 'Chivas Regal', 'Chivas Regal 25', 84);
