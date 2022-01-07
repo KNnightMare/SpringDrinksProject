@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS whiskey cascade;
 CREATE TABLE `whiskey` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `blend` varchar(255) NOT NULL,
