@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,9 +94,20 @@ public class WhiskeyControllerUnitTest {
 				.andExpect(status().isNoContent());
 	}
 	
-//	@Test
-//	public void updateTest() {
-//		Mockito.when(null)
-//		
-//	}
+	@Test
+	public void updateTest() throws Exception {
+		Whiskey whiskeyOne = new Whiskey("Scotch Whisky", "Johnnie Walker", "Gold Label", 90L);
+		Whiskey whiskeyTwo = new Whiskey(1L,"Scotch Whiskey", "Johnnie Walker", "Gold Label", 90L);
+		long testId = 1L;
+		
+		String whiskeyOneJSON = this.mapper.writeValueAsString(whiskeyOne);
+		String whiskeyTwoJSON = this.mapper.writeValueAsString(whiskeyTwo);
+		
+		Mockito.when(this.service.update(testId, whiskeyOne)).thenReturn(whiskeyTwo);
+		mvc.perform(put("/whiskey/switchForAnotherOne/1")
+		.contentType(MediaType.APPLICATION_JSON)
+		.content(whiskeyOneJSON)).andExpect(status().isAccepted())
+		.andExpect(content().json(whiskeyTwoJSON));
+		
+	}
 }
