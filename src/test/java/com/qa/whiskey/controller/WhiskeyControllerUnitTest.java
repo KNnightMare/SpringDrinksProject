@@ -1,8 +1,15 @@
 package com.qa.whiskey.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -43,5 +50,52 @@ public class WhiskeyControllerUnitTest {
 		.content(entryAsJSON)).andExpect(status()
 		.isCreated()).andExpect(content().json(entryAsJSON));
 	}
+	
+	@Test
+	public void readAllTest () throws Exception {
+		List<Whiskey> whiskeyList = new ArrayList<>();
+		
+		Whiskey whiskeyOne = new Whiskey(1L, "Scotch Whisky", "Johnnie Walker", "Gold Label", 90L);
+		Whiskey whiskeyTwo = new Whiskey(2L,"Scotch Whiskey", "Johnnie Walker", "Red Label", 82L);
+		Whiskey whiskeyThree = new Whiskey(3L, "Tennessee Whisky", "Jack Daniels", "Gentleman Jack", 86);
 
+		whiskeyList.add(whiskeyOne);
+		whiskeyList.add(whiskeyTwo);
+		whiskeyList.add(whiskeyThree);
+		
+		Mockito.when(this.service.getAll()).thenReturn(whiskeyList);
+		mvc.perform(get("/whiskey/justLookAtThemAll"))
+		.andExpect(status().isOk()).andExpect(jsonPath("$.size()"
+		,is(whiskeyList.size())));
+	}
+	
+	@Test
+	public void readByIdTest () throws Exception {
+		Whiskey newEntry = new Whiskey(1L, "Scotch Whisky", "Johnnie Walker", "Gold Label", 90L);
+		String newEntryAsJSON = this.mapper.writeValueAsString(newEntry);
+		
+		Mockito.when(this.service.getById(1L)).thenReturn(newEntry);
+		
+		mvc.perform(get("/whiskey/lookAtOnlyOne/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(newEntryAsJSON)).andExpect(status()
+				.isOk()).andExpect(content().json(newEntryAsJSON));
+	}
+	
+	@Test
+	public void deleteTest () throws Exception {
+//		Whiskey newEntry = new Whiskey(1L, "Scotch Whisky", "Johnnie Walker", "Gold Label", 90L);
+		
+		Mockito.when(this.service.delete(1)).thenReturn(true);
+		
+		mvc.perform(delete("/whiskey/drinkOne/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
+	}
+	
+//	@Test
+//	public void updateTest() {
+//		Mockito.when(null)
+//		
+//	}
 }
