@@ -20,7 +20,7 @@ public class WhiskeyService implements ServiceMethods <Whiskey> {
 	public Whiskey create(Whiskey whiskey) {
 		return this.repo.save(whiskey);
 	}
-
+	
 	@Override
 	public List<Whiskey> getAll() {
 		return this.repo.findAll();
