@@ -116,7 +116,7 @@ public class Whiskey {
 
 	@Override
 	public String toString() {
-		return "Whiskey [id=" + id + ", type=" + type + ", brand=" + brand + ", blend=" + blend + ", proof=" + proof + "]";
+		return "Whiskey [id=" + id + ", type=" + type + ", brand=" + brand + ", blend=" + blend + ", proof=" + proof
+				+ "]";
 	}
-	
 }

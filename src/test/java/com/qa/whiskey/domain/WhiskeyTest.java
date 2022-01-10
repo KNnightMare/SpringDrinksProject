@@ -68,4 +68,15 @@ public class WhiskeyTest {
 		assertEquals(whiskey.getBlend(), "Single Barrel");
 		assertEquals(whiskey.getProof(), 100L);
 	}
+	
+	@Test
+	public void toStringTest() {
+		Whiskey whiskey = new Whiskey();
+		whiskey.setId(1);
+		whiskey.setType("Scotch Whisky");
+		whiskey.setBrand("Johnnie Walker");
+		whiskey.setBlend("Black Label");
+		whiskey.setProof(86);
+		assertEquals("Whiskey [id=1, type=Scotch Whisky, brand=Johnnie Walker, blend=Black Label, proof=86]",whiskey.toString());
+	}
 }
