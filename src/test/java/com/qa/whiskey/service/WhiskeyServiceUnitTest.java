@@ -1,8 +1,8 @@
 package com.qa.whiskey.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +43,14 @@ public class WhiskeyServiceUnitTest {
 		
 		Mockito.when(this.repo.findById(2L)).thenReturn(Optional.of(output));
 		assertEquals(Optional.of(output), Optional.of(this.service.getById(2L)));
-		
-		//need some help here
-		Mockito.when(this.repo.findById(3L)).thenReturn(null);
-//		assertThat(this.service.getById(3)).isNull();
+		Mockito.verify(this.repo, Mockito.times(1)).findById(2L);
 	}
+		
+//		@Test
+//		public void ifItFailsTest() {
+//		Mockito.when(this.repo.findById(3L)).thenReturn(null);
+//		assertThat(this.service.getById(3)).isNull();
+//	}
 	
 	@Test
 	public void getAllTest() {
@@ -66,20 +69,37 @@ public class WhiskeyServiceUnitTest {
 	
 	@Test
 	public void deleteTest() {
-		List<Whiskey> whiskeyList = new ArrayList<>();
+		Mockito.when(this.repo.existsById(1L)).thenReturn(false);
+		assertTrue(this.service.delete(1L));
+		Mockito.verify(this.repo, Mockito.times(1)).deleteById(1L);
+		Mockito.verify(this.repo, Mockito.times(1)).existsById(1L);
 		
-		Whiskey whiskeySix = new Whiskey(6L,"Scotch Whiskey", "Johnnie Walker", "Red Label", 82L);
-		Whiskey whiskeySeven= new Whiskey(7L, "Tennessee Whisky", "Jack Daniels", "Gentleman Jack", 86);
-		whiskeyList.add(whiskeySix);
-		whiskeyList.add(whiskeySeven);
-
-		//Need a little tweak here as well
-		this.service.delete(6L);
-		assertThat(this.service.getById(6)).isNull();
 	}
 	
+
 	@Test
 	public void updateTest() {
+		Whiskey input = new Whiskey("Tennessee Whisky", "Four Roses", "Purple Rose", 96);
+		Whiskey output = new Whiskey(1L, "Tennessee Whisky", "Four Roses", "Purple Rose", 96);
+		Optional<Whiskey> existing = Optional.of(new Whiskey(1L,"Scotch Whisky", "Four Roses", "Purple Rose", 96));
 		
+		Mockito.when(this.repo.findById(1L)).thenReturn(existing);
+		Mockito.when(this.repo.saveAndFlush(output)).thenReturn(output);
+		assertEquals(output, this.service.update(1L, input));
+		Mockito.verify(this.repo, Mockito.times(1)).findById(1L);
+		Mockito.verify(this.repo, Mockito.times(1)).saveAndFlush(output);
+		
+		
+		
+		
+		
+//		Whiskey currentWhiskey = new Whiskey(8L, "Scotch Whiskey", "Johnnie Walker", "Red Label", 82);
+//		Whiskey whiskeyEight = this.repo.findById(8L).get();
+//		whiskeyEight.setBlend("Silver Jack");
+//		Whiskey updatedWhiskey = this.repo.saveAndFlush(whiskeyEight);
+//		Assertions.assertThat(updatedWhiskey.getBlend()).isEqualTo("Silver Jack");
+//		Whiskey newWhiskey;
+//		whiskeyEight.setBlend("Silver Jack");
+//		given(this.repo.findById(8L)).willReturn(Optional.of(whiskeyEight));
 	}
 }

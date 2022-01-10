@@ -42,4 +42,6 @@ public class WhiskeyControllerIntegrationTest {
 				.content(entryAsJSON)).andExpect(status()
 				.isCreated()).andExpect(content().json(resultAsJSON));
 	}
+	
+	
 }
